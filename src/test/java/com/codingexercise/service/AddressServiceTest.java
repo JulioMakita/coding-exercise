@@ -81,7 +81,7 @@ class AddressServiceTest {
   @Test
   void given_existingAddress_when_editExistingAddressAndEdit_then_returnUpdatedAddressWithEditedValues() {
     Optional<Address> address = Optional.of(new Address("New Road", "New York City", "New York",
-        "ABC1112", null));
+        "ABC1112", new Person(1L, "Peter", "Parker")));
     AddressDto addressDto = ConverterUtils.addressToDto(address.get());
     when(addressRepository.findById(1L)).thenReturn(address);
     when(addressRepository.save(address.get())).thenReturn(address.get());

@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.codingexercise.dto.AddressDto;
 import com.codingexercise.entity.Address;
 import com.codingexercise.entity.Person;
 import com.codingexercise.exception.NotFoundException;
 import com.codingexercise.repository.AddressRepository;
 import com.codingexercise.utils.ConverterUtils;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AddressService {
@@ -54,6 +56,7 @@ public class AddressService {
   public AddressDto edit(long addressId, AddressDto addressDto) {
     Address address = findById(addressId);
     addressDto.setId(address.getId());
+    addressDto.setPersonId(address.getPerson().getId());
     addressRepository.save(dtoToAddress(addressDto));
     return addressDto;
   }
