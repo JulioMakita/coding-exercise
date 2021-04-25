@@ -1,7 +1,6 @@
 package com.codingexercise.controller;
 
 import javax.validation.Valid;
-import javax.validation.Validator;
 import java.util.List;
 import java.util.Set;
 import com.codingexercise.dto.AddressDto;
@@ -18,11 +17,8 @@ public class AddressController {
 
   private AddressService addressService;
 
-  private Validator validator;
-
-  public AddressController(AddressService addressService, Validator validator) {
+  public AddressController(AddressService addressService) {
     this.addressService = addressService;
-    this.validator = validator;
   }
 
   @GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
