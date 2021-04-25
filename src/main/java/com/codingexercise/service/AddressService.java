@@ -36,7 +36,6 @@ public class AddressService {
 
   public List<AddressDto> save(long personId, List<AddressDto> addressDtoList) {
     Person person = personService.findById(personId);
-
     return addressDtoList.stream().map(a -> {
       a.setPersonId(person.getId());
       Address address = addressRepository.save(dtoToAddress(a));
@@ -67,5 +66,11 @@ public class AddressService {
 
   public long count() {
     return addressRepository.count();
+  }
+
+  public boolean isAddressExists(AddressDto address) {
+    return addressRepository.existsByStreetAndCityAndStateAndPostalCodeAndPersonId(
+        address.getStreet(), address.getCity(), address.getState(), address.getPostalCode(),
+        address.getPersonId());
   }
 }

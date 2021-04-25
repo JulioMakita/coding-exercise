@@ -1,7 +1,6 @@
 package com.codingexercise.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +39,22 @@ public class AddressRepositoryTest {
   void tearDown() {
     underTest.deleteAll();
     personRepository.deleteAll();
+  }
+
+  @Test
+  void given_addressVariables_when_checkWhetherAddressExists_then_returnTrue() {
+    boolean result = underTest.existsByStreetAndCityAndStateAndPostalCodeAndPersonId("New Road",
+        "New York City", "New York", "ABC1112", personSaved.getId());
+
+    assertTrue(result);
+  }
+
+  @Test
+  void given_addressVariablesWithNonExistingPersonId_when_checkWhetherAddressExists_then_returnFalse() {
+    boolean result = underTest.existsByStreetAndCityAndStateAndPostalCodeAndPersonId("New Road",
+        "New York City", "New York", "ABC1112", 3L);
+
+    assertFalse(result);
   }
 
   @Test

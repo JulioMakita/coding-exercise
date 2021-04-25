@@ -7,17 +7,19 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 import com.codingexercise.dto.AddressDto;
 import com.codingexercise.entity.Address;
 import com.codingexercise.entity.Person;
 import com.codingexercise.exception.NotFoundException;
 import com.codingexercise.repository.AddressRepository;
 import com.codingexercise.utils.ConverterUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class AddressServiceTest {

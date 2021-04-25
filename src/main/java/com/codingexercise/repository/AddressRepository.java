@@ -8,4 +8,6 @@ import com.codingexercise.entity.Address;
 @Repository
 public interface AddressRepository extends CrudRepository<Address, Long> {
 
+  boolean existsByStreetAndCityAndStateAndPostalCodeAndPersonId(String street, String city,
+      String state, String postalCode, long personId);
 }

@@ -2,7 +2,9 @@ package com.codingexercise.dto;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
+import com.codingexercise.validator.ValidAddress;
 
+@ValidAddress
 public class AddressDto {
 
   private long id;
