@@ -1,5 +1,14 @@
 package com.codingexercise.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import com.codingexercise.dto.PersonDto;
 import com.codingexercise.entity.Person;
 import com.codingexercise.exception.NotFoundException;
@@ -11,15 +20,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -77,11 +77,11 @@ class PersonServiceTest {
 
   @Test
   void given_existingPerson_when_editExistingPersonAndSave_then_returnUpdatedPersonWithEditedValues() {
-    Optional<Person> person = Optional.of(new Person(1L, "Peter", "Parker"));
+    Optional<Person> person = Optional.of(new Person( "Peter", "Parker"));
     PersonDto personDto = ConverterUtils.personToDto(person.get());
     when(personRepository.findById(1L)).thenReturn(person);
     when(personRepository.save(person.get())).thenReturn(person.get());
-    PersonDto result = underTest.editPerson(personDto);
+    PersonDto result = underTest.editPerson(1L, personDto);
     assertEquals(personDto, result);
   }
 

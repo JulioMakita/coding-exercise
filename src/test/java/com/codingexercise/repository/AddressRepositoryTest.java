@@ -1,18 +1,20 @@
 package com.codingexercise.repository;
 
-import com.codingexercise.entity.Address;
-import com.codingexercise.entity.Person;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import com.codingexercise.entity.Address;
+import com.codingexercise.entity.Person;
 
 @DataJpaTest
 public class AddressRepositoryTest {

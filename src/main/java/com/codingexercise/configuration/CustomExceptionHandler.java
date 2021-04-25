@@ -2,6 +2,7 @@ package com.codingexercise.configuration;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<CustomErrorResponse> notFoundExceptionHandler(Exception ex,
+  public ResponseEntity<CustomErrorResponse> handleNotFoundException(Exception ex,
       HttpServletRequest request) {
 
     CustomErrorResponse errors = new CustomErrorResponse(LocalDateTime.now(),
@@ -29,6 +30,21 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         request.getRequestURI(), Arrays.asList(ex.getMessage()));
 
     return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<CustomErrorResponse> handleConstraintViolationException(Exception ex,
+      HttpServletRequest request) {
+    ConstraintViolationException exception = (ConstraintViolationException) ex;
+
+    List<String> stringList = exception.getConstraintViolations().stream()
+        .map(e -> e.getPropertyPath() + ": " + e.getMessage()).collect(Collectors.toList());
+
+    CustomErrorResponse errors =
+        new CustomErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.getReasonPhrase(), request.getRequestURI(), stringList);
+
+    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
 
   @Override
@@ -39,7 +55,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         .map(x -> x.getDefaultMessage()).collect(Collectors.toList());
 
     CustomErrorResponse errors = new CustomErrorResponse(LocalDateTime.now(),
-        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(),
+        HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
         ((ServletWebRequest) request).getRequest().getRequestURI(), fieldErrors);
 
     return new ResponseEntity<>(errors, headers, status);

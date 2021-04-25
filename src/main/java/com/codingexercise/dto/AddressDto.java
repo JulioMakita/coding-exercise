@@ -1,6 +1,5 @@
 package com.codingexercise.dto;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
@@ -20,18 +19,21 @@ public class AddressDto {
   @NotBlank(message = "Postal code should not be empty")
   private String postalCode;
 
-  @Min(value = 1, message = "Address should have a person id associated")
   private long personId;
 
   public AddressDto() {}
 
-  public AddressDto(long id, String street, String city, String state, String postalCode,
-      long personId) {
-    this.id = id;
+  public AddressDto(String street, String city, String state, String postalCode) {
     this.street = street;
     this.city = city;
     this.state = state;
     this.postalCode = postalCode;
+  }
+
+  public AddressDto(long id, String street, String city, String state, String postalCode,
+      long personId) {
+    this(street, city, state, postalCode);
+    this.id = id;
     this.personId = personId;
   }
 

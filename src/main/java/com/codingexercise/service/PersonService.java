@@ -47,8 +47,8 @@ public class PersonService {
     return result.get();
   }
 
-  public PersonDto editPerson(PersonDto personDto) {
-    Person personFound = findById(personDto.getId());
+  public PersonDto editPerson(long personId, PersonDto personDto) {
+    Person personFound = findById(personId);
     personDto.setId(personFound.getId());
     return save(personDto);
   }

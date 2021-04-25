@@ -29,21 +29,18 @@ public class AddressService {
   public Set<AddressDto> findAll() {
     List<Address> result = (List<Address>) addressRepository.findAll();
     return result.stream().map(address -> ConverterUtils.addressToDto(address))
-            .collect(Collectors.toSet());
+        .collect(Collectors.toSet());
   }
 
   public List<AddressDto> save(long personId, List<AddressDto> addressDtoList) {
     Person person = personService.findById(personId);
 
-    List<Address> addressList = addressDtoList.stream().map(a -> {
+    return addressDtoList.stream().map(a -> {
       a.setPersonId(person.getId());
-      Address address = dtoToAddress(a);
-      return address;
+      Address address = addressRepository.save(dtoToAddress(a));
+      a.setId(address.getId());
+      return a;
     }).collect(Collectors.toList());
-
-    addressRepository.saveAll(addressList);
-
-    return addressDtoList;
   }
 
   public Address findById(long addressId) {
@@ -54,8 +51,8 @@ public class AddressService {
     return existingAddress.get();
   }
 
-  public AddressDto edit(AddressDto addressDto) {
-    Address address = findById(addressDto.getId());
+  public AddressDto edit(long addressId, AddressDto addressDto) {
+    Address address = findById(addressId);
     addressDto.setId(address.getId());
     addressRepository.save(dtoToAddress(addressDto));
     return addressDto;

@@ -29,6 +29,6 @@ public class ConverterUtils {
   public static AddressDto addressToDto(Address address) {
     return new AddressDto(address.getId(), address.getStreet(), address.getCity(),
         address.getState(), address.getPostalCode(),
-        address.getPerson() != null ? address.getPerson().getId() : null);
+        address.getPerson() != null ? address.getPerson().getId() : 0);
   }
 }

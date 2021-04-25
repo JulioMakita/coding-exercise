@@ -1,7 +1,17 @@
 package com.codingexercise.controller;
 
-import com.codingexercise.dto.PersonDto;
-import com.codingexercise.service.PersonService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,15 +23,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.codingexercise.dto.PersonDto;
+import com.codingexercise.service.PersonService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PersonControllerTest {
@@ -40,7 +44,7 @@ class PersonControllerTest {
       throws Exception {
 
     URI uri = new URI("http://localhost:" + port + "/person/add");
-    PersonDto personDto = new PersonDto(1L, "Peter", "Parker");
+    PersonDto personDto = new PersonDto("Peter", "Parker");
     HttpEntity<PersonDto> requestEntity = new HttpEntity(personDto);
 
     when(personService.save(any(PersonDto.class))).thenReturn(personDto);
@@ -48,24 +52,22 @@ class PersonControllerTest {
     ResponseEntity<PersonDto> response =
         restTemplate.exchange(uri, HttpMethod.POST, requestEntity, PersonDto.class);
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(requestEntity.getBody().getFirstName(), response.getBody().getFirstName());
-    assertEquals(requestEntity.getBody().getLastName(), response.getBody().getLastName());
+    assertEquals(requestEntity.getBody(), response.getBody());
   }
 
   @Test
   void given_savedPerson_when_callingEditPerson_then_shouldUpdatedPersonMatchToGivenPerson()
       throws Exception {
-    PersonDto person = new PersonDto(1L, "Peter2", "Parker2");
-    when(personService.editPerson(any(PersonDto.class))).thenReturn(person);
+    PersonDto person = new PersonDto( "Peter2", "Parker2");
+    when(personService.editPerson(1L, person)).thenReturn(person);
 
-    URI uri = new URI("http://localhost:" + port + "/person/edit");
+    URI uri = new URI("http://localhost:" + port + "/person/edit/1");
     HttpEntity<PersonDto> requestEntity = new HttpEntity(person);
     ResponseEntity<PersonDto> response =
         restTemplate.exchange(uri, HttpMethod.PUT, requestEntity, PersonDto.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(requestEntity.getBody().getFirstName(), response.getBody().getFirstName());
-    assertEquals(requestEntity.getBody().getLastName(), response.getBody().getLastName());
+    assertEquals(requestEntity.getBody(), response.getBody());
   }
 
   @Test
@@ -107,4 +109,22 @@ class PersonControllerTest {
     assertEquals(1, response.getBody());
   }
 
+  @Test
+  void given_newPersonWithNullFirstNameAndEmptyLastName_when_callingAddPerson_then_returnBadRequestAndTwoErrorMessages()
+      throws Exception {
+    URI uri = new URI("http://localhost:" + port + "/person/add");
+    PersonDto personDto = new PersonDto("", null);
+    HttpEntity<PersonDto> requestEntity = new HttpEntity(personDto);
+
+    when(personService.save(any(PersonDto.class))).thenReturn(personDto);
+
+    ResponseEntity<Object> response =
+        restTemplate.exchange(uri, HttpMethod.POST, requestEntity, Object.class);
+
+    Map<String, Object> errorResult = (HashMap) response.getBody();
+    List<String> errorMessages = (List<String>) errorResult.get("messages");
+
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertEquals(2, errorMessages.size());
+  }
 }

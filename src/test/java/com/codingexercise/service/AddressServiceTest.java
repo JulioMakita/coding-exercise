@@ -1,5 +1,12 @@
 package com.codingexercise.service;
 
+import static com.codingexercise.utils.ConverterUtils.dtoToAddress;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import com.codingexercise.dto.AddressDto;
 import com.codingexercise.entity.Address;
 import com.codingexercise.entity.Person;
@@ -8,17 +15,9 @@ import com.codingexercise.repository.AddressRepository;
 import com.codingexercise.utils.ConverterUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import static com.codingexercise.utils.ConverterUtils.dtoToAddress;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 class AddressServiceTest {
@@ -44,7 +43,8 @@ class AddressServiceTest {
     Person person = new Person(1L, "Norman", "Osborn");
 
     when(personService.findById(1L)).thenReturn(person);
-    when(addressRepository.saveAll(Mockito.any(List.class))).thenReturn(addressList);
+    when(addressRepository.save(addressList.get(0))).thenReturn(addressList.get(0));
+    when(addressRepository.save(addressList.get(1))).thenReturn(addressList.get(1));
 
     List<AddressDto> result = underTest.save(1L, addressListDto);
     assertEquals(addressListDto.size(), result.size());
@@ -80,12 +80,12 @@ class AddressServiceTest {
 
   @Test
   void given_existingAddress_when_editExistingAddressAndEdit_then_returnUpdatedAddressWithEditedValues() {
-    Optional<Address> address = Optional.of(new Address(1L, "New Road", "New York City", "New York",
-        "ABC1112", new Person(1L, "Harry", "Osborn")));
+    Optional<Address> address = Optional.of(new Address("New Road", "New York City", "New York",
+        "ABC1112", null));
     AddressDto addressDto = ConverterUtils.addressToDto(address.get());
     when(addressRepository.findById(1L)).thenReturn(address);
     when(addressRepository.save(address.get())).thenReturn(address.get());
-    AddressDto result = underTest.edit(addressDto);
+    AddressDto result = underTest.edit(1L, addressDto);
     assertEquals(addressDto, result);
   }
 

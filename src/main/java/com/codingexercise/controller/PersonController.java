@@ -1,5 +1,7 @@
 package com.codingexercise.controller;
 
+import javax.validation.Valid;
+import java.util.Set;
 import com.codingexercise.dto.PersonDto;
 import com.codingexercise.exception.NotFoundException;
 import com.codingexercise.service.PersonService;
@@ -7,9 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/person")
@@ -32,10 +31,10 @@ public class PersonController {
     return ResponseEntity.ok(savedPerson);
   }
 
-  @PutMapping(path = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
+  @PutMapping(path = "/edit/{personId}", consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PersonDto> editPerson(@RequestBody PersonDto person) {
-    PersonDto savedPerson = personService.editPerson(person);
+  public ResponseEntity<PersonDto> editPerson(@PathVariable long personId, @RequestBody @Valid PersonDto person) {
+    PersonDto savedPerson = personService.editPerson(personId, person);
     return ResponseEntity.ok(savedPerson);
   }
 

@@ -19,11 +19,15 @@ public class PersonDto {
 
   public PersonDto() {}
 
-  public PersonDto(long id, String firstName, String lastName) {
-    this.id = id;
+  public PersonDto(String firstName, String lastName) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.addresses = new HashSet<>();
+  }
+
+  public PersonDto(long id, String firstName, String lastName) {
+    this(firstName, lastName);
+    this.id = id;
   }
 
   public PersonDto(long id, String firstName, String lastName, Set<AddressDto> addresses) {
