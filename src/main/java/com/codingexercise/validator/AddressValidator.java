@@ -29,9 +29,9 @@ public class AddressValidator implements ConstraintValidator<ValidAddress, Addre
 
     Map<String, String> pathVariables =
         (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-    String personId = pathVariables.get("personId");
-    addressDto.setPersonId(Long.valueOf(personId));
-
+    if (pathVariables.containsKey("personId")) {
+      addressDto.setPersonId(Long.valueOf(pathVariables.get("personId")));
+    }
 
     boolean addressExists = addressService.isAddressExists(addressDto);
     if (addressExists) {
