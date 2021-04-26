@@ -15,7 +15,8 @@ public class Person {
 
   private String lastName;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "person", cascade = {CascadeType.ALL})
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "person",
+      cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
   private Set<Address> addresses;
 
   public Person() {}
